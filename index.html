@@ -1,0 +1,1035 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#100606">
+<meta name="description" content="Sensi Pro FF: gerador de sensibilidade para Free Fire Mobile e PC.">
+<title>SENSI PRO FF — Red Edition</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#100606;
+  --panel:#190b0b;
+  --red:#ff2525;
+  --red2:#ff5151;
+  --text:#fff1f1;
+  --muted:#c5aaaa;
+  --border:rgba(255,37,37,.3);
+  --glow:0 0 28px rgba(255,25,25,.15);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;color:var(--text);
+  font-family:'Rajdhani',sans-serif;font-size:18px;
+  background:#100606;
+  background-image:linear-gradient(rgba(10,0,0,.65),rgba(10,0,0,.82)),url("fundo.jpg");
+  background-position:center;background-size:cover;background-attachment:fixed;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+header{
+  min-height:76px;padding:14px 7%;display:flex;align-items:center;
+  justify-content:space-between;gap:15px;border-bottom:1px solid var(--border);
+  background:rgba(13,4,4,.92);position:sticky;top:0;z-index:20;
+  backdrop-filter:blur(14px)
+}
+.logo{font-family:Orbitron,sans-serif;font-size:20px;font-weight:900}
+.logo span,h1 span,.section-title span{color:var(--red)}
+.status{color:var(--red2);font-size:12px;letter-spacing:2px;font-weight:700}
+.status:before{
+  content:"";display:inline-block;width:7px;height:7px;background:var(--red);
+  border-radius:50%;margin-right:7px;box-shadow:0 0 10px var(--red);
+  animation:pulse 1.5s infinite
+}
+main{max-width:1150px;width:91%;margin:auto}
+.hero{text-align:center;padding:65px 10px 38px}
+.tag{
+  display:inline-block;border:1px solid var(--border);background:#320000b8;
+  color:var(--red2);padding:8px 15px;border-radius:30px;font-size:12px;
+  font-weight:700;letter-spacing:2px
+}
+h1{
+  font-family:Orbitron,sans-serif;font-size:clamp(35px,6vw,68px);
+  line-height:1.12;margin:23px 0 16px;font-weight:900;text-shadow:0 3px 20px #000
+}
+h1 span{text-shadow:0 0 30px #ff19196b}
+.hero p{color:#f0dada;max-width:650px;margin:auto;line-height:1.65;font-size:19px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:0 auto 28px;max-width:780px}
+.stat{
+  text-align:center;border:1px solid var(--border);background:#190707e8;
+  padding:18px 8px;border-radius:12px;box-shadow:var(--glow)
+}
+.stat strong{display:block;color:var(--red);font-family:Orbitron,sans-serif;font-size:22px}
+.stat small{color:#d7baba}
+.mode-switch{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:0 auto 28px}
+.mode-btn{
+  min-width:175px;padding:15px 24px;border-radius:12px;
+  border:1px solid var(--border);background:#190707ed;color:#e9cccc;
+  font-family:Orbitron,sans-serif;font-size:12px;font-weight:800;
+  transition:.25s
+}
+.mode-btn.active{background:linear-gradient(120deg,#ff2525,#9c0000);color:white;border-color:#ff6969;box-shadow:0 0 24px #ff252544}
+.mode-btn:hover{transform:translateY(-4px);box-shadow:0 0 23px #ff252566}
+.mode-btn:active,.primary:active,.secondary:active,.preset-btn:active{transform:scale(.96)}
+.mode-section{display:none;animation:appear .35s ease}
+.mode-section.active{display:block}
+.section-title{font-family:Orbitron,sans-serif;font-size:17px;margin:0 0 20px}
+.generator{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:22px;align-items:start;padding-bottom:55px}
+.panel{
+  background:#190707ed;border:1px solid var(--border);border-radius:17px;
+  padding:25px;min-width:0;box-shadow:0 12px 40px #0006,var(--glow);
+  backdrop-filter:blur(8px)
+}
+.field{margin-bottom:19px}
+.field label{display:block;margin-bottom:8px;color:#f5dede;font-weight:700;font-size:16px}
+select,input{
+  width:100%;min-height:48px;padding:11px 13px;background:#0c0505f5;
+  border:1px solid #512020;border-radius:9px;color:var(--text);outline:none
+}
+select:focus,input:focus{border-color:var(--red);box-shadow:0 0 0 3px #ff25251f}
+.hint{font-size:13px;color:#d0b5b5;margin-top:6px;line-height:1.5}
+.primary,.secondary,.preset-btn{position:relative;overflow:hidden;transition:.25s}
+.primary{
+  width:100%;border:1px solid #ff5c5c;border-radius:10px;padding:15px;
+  background:linear-gradient(100deg,#ff2020,#a90000);color:white;
+  font-family:Orbitron,sans-serif;font-weight:900;font-size:12px;
+  box-shadow:0 5px 20px #ff000026
+}
+.primary:before,.preset-btn:before{
+  content:"";position:absolute;top:-80%;left:-50%;width:25%;height:260%;
+  background:#ffffff40;transform:rotate(25deg);transition:left .6s
+}
+.primary:hover:before,.preset-btn:hover:before{left:140%}
+.primary:hover{transform:translateY(-3px);box-shadow:0 8px 28px #ff000055;filter:brightness(1.15)}
+.secondary{background:#290e0e;color:var(--red2);border:1px solid var(--border);border-radius:9px;padding:12px;font-weight:700}
+.secondary:hover{background:#451111;border-color:var(--red);transform:translateY(-2px)}
+.results{display:none}
+.results.visible{display:block;animation:appear .4s ease}
+.result-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px}
+.result-head h2{font-family:Orbitron,sans-serif;font-size:15px;margin:0}
+.pill{color:var(--red2);background:#ff25251f;border:1px solid var(--border);border-radius:30px;padding:5px 9px;font-size:11px;font-weight:700;white-space:nowrap}
+.device-info{border:1px solid #482020;border-radius:10px;padding:13px;background:#100606;margin-bottom:18px}
+.device-info strong{display:block;font-size:18px}
+.device-info span{color:#d0b5b5;font-size:14px}
+.sensi-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border-bottom:1px solid #482020;padding:14px 0}
+.sensi-row:last-child{border-bottom:0}
+.sensi-name{font-weight:700}
+.sensi-number{font-family:Orbitron,sans-serif;font-weight:800;color:var(--red);font-size:20px;min-width:40px;text-align:right}
+.bar{grid-column:1/-1;height:5px;background:#321515;border-radius:20px;overflow:hidden}
+.bar span{height:100%;display:block;background:linear-gradient(90deg,#b40000,#ff2525,#ff7777);border-radius:inherit;transition:width .5s}
+.dpi-card{margin-top:20px;padding:17px;border:1px solid #ff25256b;border-radius:12px;background:#320505c7}
+.dpi-card small{color:#d0b5b5;display:block}
+.dpi-value{font-family:Orbitron,sans-serif;font-size:35px;font-weight:900;color:var(--red);margin:6px 0}
+.dpi-card p{color:#e0caca;margin:8px 0 0;font-size:15px;line-height:1.55}
+.result-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.warning{margin-top:16px;padding:12px;border-left:3px solid #ff4242;background:#ff252517;color:#ead1d1;font-size:14px;line-height:1.55}
+.generation-count{text-align:center;color:#d0b5b5;font-size:13px;margin-top:12px}
+.generation-count strong{color:var(--red2)}
+.preset-area{margin:0 0 24px}
+.preset-area h3{font-family:Orbitron,sans-serif;font-size:13px;margin:0 0 12px}
+.preset-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.preset-btn{
+  padding:13px 9px;background:linear-gradient(145deg,#2a0b0b,#160707);
+  border:1px solid #682020;border-radius:10px;color:#ffe5e5;font-weight:800
+}
+.preset-btn:hover{border-color:var(--red);background:#451010;transform:translateY(-3px);box-shadow:0 5px 20px #ff25252b}
+.preset-btn small{display:block;color:#cdaaaa;font-weight:500;font-size:12px;margin-top:4px}
+.pc-note{font-size:14px;color:#d9baba;line-height:1.6;margin-top:15px}
+.extra{margin:0 0 45px}
+.extra-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.tip{border:1px solid var(--border);border-radius:13px;background:#190707e8;padding:20px}
+.tip .icon{font-size:26px}
+.tip h3{margin:10px 0 6px;font-size:19px}
+.tip p{margin:0;color:#d0b5b5;font-size:16px;line-height:1.55}
+.faq{border-top:1px solid var(--border);padding:23px 0}
+.faq h3{font-size:19px;margin:0 0 7px}
+.faq p{color:#e0caca;line-height:1.6;margin:0}
+footer{border-top:1px solid var(--border);text-align:center;padding:28px 15px;color:#d0b5b5;font-size:14px;background:#0a0303e8}
+.toast{
+  position:fixed;bottom:24px;left:50%;z-index:99;
+  transform:translate(-50%,30px);background:#250909;border:1px solid var(--red);
+  color:white;padding:13px 20px;border-radius:12px;opacity:0;pointer-events:none;
+  box-shadow:0 0 30px #ff25253b;transition:.3s;text-align:center;width:max-content;max-width:90%
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@keyframes pulse{50%{opacity:.35;box-shadow:0 0 2px var(--red)}}
+@keyframes appear{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:800px){
+  .generator{grid-template-columns:1fr}
+  .hero{padding-top:45px}
+  .extra-grid{grid-template-columns:1fr}
+  header{padding:14px 5%}
+  body{background-attachment:scroll}
+}
+@media(max-width:430px){
+  main{width:93%}.panel{padding:18px}
+  .status{font-size:10px;letter-spacing:1px}
+  .logo{font-size:16px}.stats{gap:7px}
+  .stat strong{font-size:17px}.stat small{font-size:12px}
+  .result-head{align-items:flex-start}.result-head h2{font-size:13px}
+  .result-actions{grid-template-columns:1fr}
+  .mode-btn{min-width:135px;padding:13px}
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="logo">SENSI <span>PRO FF</span></div>
+  <div class="status">SISTEMA ONLINE</div>
+</header>
+
+<main>
+<section class="hero">
+  <span class="tag">FREE FIRE • RED EDITION</span>
+  <h1>SUA MIRA.<br><span>SUAS REGRAS.</span></h1>
+  <p>Gere configurações para Free Fire Mobile ou PC. Teste diferentes estilos, copie os valores e encontre os ajustes que funcionam melhor para você.</p>
+</section>
+
+<section class="stats">
+  <div class="stat"><strong>02</strong><small>Modos de jogo</small></div>
+  <div class="stat"><strong>∞</strong><small>Combinações possíveis</small></div>
+  <div class="stat"><strong>100%</strong><small>Gratuito</small></div>
+</section>
+
+<div class="mode-switch">
+  <button class="mode-btn active" data-mode="mobile">📱 MOBILE</button>
+  <button class="mode-btn" data-mode="pc">🖥️ PC / EMULADOR</button>
+</div>
+
+<!-- ====================== MODO MOBILE ====================== -->
+<section class="mode-section active" id="mobile">
+<div class="generator">
+
+<div class="panel">
+  <h2 class="section-title"><span>01 /</span> SEU DISPOSITIVO</h2>
+
+  <div class="field">
+    <label for="marca">Marca do celular</label>
+    <select id="marca">
+      <option value="Samsung">Samsung</option>
+      <option value="Motorola">Motorola</option>
+      <option value="Xiaomi">Xiaomi</option>
+      <option value="Redmi">Redmi</option>
+      <option value="POCO">POCO</option>
+      <option value="iPhone">iPhone</option>
+      <option value="Realme">Realme</option>
+      <option value="Infinix">Infinix</option>
+      <option value="Tecno">Tecno</option>
+      <option value="ASUS">ASUS</option>
+      <option value="Outro">Outra marca</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="modelo">Modelo do celular (opcional)</label>
+    <input id="modelo" type="text" placeholder="Ex.: Galaxy A15, Moto G54">
+    <div class="hint">Informe o modelo para identificar seu perfil.</div>
+  </div>
+
+  <div class="field">
+    <label for="desempenho">Desempenho do aparelho</label>
+    <select id="desempenho">
+      <option value="fraco">Básico — entrada</option>
+      <option value="medio" selected>Intermediário</option>
+      <option value="forte">Potente — alto desempenho</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="estilo">Estilo de jogo</label>
+    <select id="estilo">
+      <option value="capa">Puxada de capa</option>
+      <option value="precisao">Precisão e controle</option>
+      <option value="equilibrado" selected>Equilibrado</option>
+      <option value="rush">Rush — movimentação rápida</option>
+      <option value="oneTap">One Tap</option>
+      <option value="custom">Aleatório</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="dedos">Quantidade de dedos</label>
+    <select id="dedos">
+      <option value="2">2 dedos</option>
+      <option value="3">3 dedos</option>
+      <option value="4">4 dedos</option>
+      <option value="5">5 dedos ou mais</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="fps">Taxa de quadros (FPS)</label>
+    <select id="fps">
+      <option value="30">Até 30 FPS</option>
+      <option value="60" selected>Até 60 FPS</option>
+      <option value="90">Até 90 FPS</option>
+      <option value="120">Até 120 FPS</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="intensidade">Intensidade da sensibilidade</label>
+    <select id="intensidade">
+      <option value="baixa">Baixa — mais controle</option>
+      <option value="media" selected>Média — equilibrada</option>
+      <option value="alta">Alta — movimentos rápidos</option>
+      <option value="extrema">Extrema — valores elevados</option>
+      <option value="aleatoria">Surpresa</option>
+    </select>
+  </div>
+
+  <button class="primary" id="gerar">⚡ GERAR MINHA SENSIBILIDADE</button>
+  <div class="hint">Gere quantas vezes quiser e teste no treinamento.</div>
+</div>
+
+<div class="panel">
+  <div class="result-head">
+    <h2><span style="color:var(--red)">02 /</span> SUA CONFIGURAÇÃO</h2>
+    <span class="pill">RED EDITION</span>
+  </div>
+
+  <div class="preset-area">
+    <h3>🔥 PERFIS DE JOGADORES MOBILE</h3>
+    <div class="preset-grid">
+      <button class="preset-btn" data-preset="nobru">NOBRU<small>Estilo agressivo</small></button>
+      <button class="preset-btn" data-preset="elgato">EL GATO<small>Estilo rush</small></button>
+      <button class="preset-btn" data-preset="cerol">CEROL<small>Estilo equilibrado</small></button>
+      <button class="preset-btn" data-preset="bak">BAK<small>Estilo competitivo</small></button>
+    </div>
+    <p class="hint">Perfis demonstrativos para experimentar. Não são valores oficiais confirmados dos jogadores.</p>
+  </div>
+
+  <div id="estadoInicial">
+    <div class="device-info">
+      <strong>Configuração aguardando</strong>
+      <span>Escolha suas preferências ou um perfil acima.</span>
+    </div>
+    <div style="padding:24px 8px;text-align:center">
+      <div style="font-size:50px">🎯</div>
+      <h3>Pronto para testar?</h3>
+      <p style="color:#d0b5b5;line-height:1.6">Sua sensibilidade e sugestão de DPI aparecerão aqui.</p>
+    </div>
+  </div>
+
+  <div class="results" id="resultados">
+    <div class="device-info">
+      <strong id="nomeDispositivo">Seu aparelho</strong>
+      <span id="resumoDispositivo"></span>
+    </div>
+
+    <div id="listaSensi"></div>
+
+    <div class="dpi-card">
+      <small>SUGESTÃO DE DPI / LARGURA MÍNIMA</small>
+      <div class="dpi-value" id="dpiValor">480</div>
+      <small id="tipoDpi"></small>
+      <p id="dpiDescricao"></p>
+    </div>
+
+    <div class="result-actions">
+      <button class="primary" id="copiar">📋 COPIAR CONFIGURAÇÃO</button>
+      <button class="secondary" id="refazer">↻ GERAR NOVAMENTE</button>
+    </div>
+
+    <div class="generation-count">Geração número <strong id="contador">0</strong></div>
+    <div class="warning" id="aviso">Valores experimentais para teste.</div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ====================== MODO PC ====================== -->
+<section class="mode-section" id="pc">
+<div class="generator">
+
+<div class="panel">
+  <h2 class="section-title"><span>01 /</span> CONFIGURAÇÃO PC</h2>
+
+  <div class="field">
+    <label for="emulador">Emulador</label>
+    <select id="emulador">
+      <option value="BlueStacks">BlueStacks</option>
+      <option value="LDPlayer">LDPlayer</option>
+      <option value="GameLoop">GameLoop</option>
+      <option value="Outro emulador">Outro emulador</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="pcEstilo">Estilo de jogo</label>
+    <select id="pcEstilo">
+      <option value="controle">Precisão e controle</option>
+      <option value="equilibrado" selected>Equilibrado</option>
+      <option value="rapido">Rápido / agressivo</option>
+      <option value="onetap">One Tap</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="pcDpi">DPI do mouse</label>
+    <select id="pcDpi">
+      <option value="400">400 DPI</option>
+      <option value="800" selected>800 DPI</option>
+      <option value="1200">1200 DPI</option>
+      <option value="1600">1600 DPI</option>
+      <option value="custom">Personalizado</option>
+    </select>
+  </div>
+
+  <div class="field" id="customDpiField" style="display:none">
+    <label for="customDpi">DPI personalizado</label>
+    <input id="customDpi" type="number" min="100" max="16000" value="800">
+  </div>
+
+  <div class="field">
+    <label for="gameSens">Sensibilidade do jogo</label>
+    <input id="gameSens" type="number" min="1" max="200" value="100">
+    <div class="hint">Valor de referência para ajustar no jogo ou emulador.</div>
+  </div>
+
+  <div class="field">
+    <label for="sensX">Sensibilidade X — horizontal</label>
+    <input id="sensX" type="number" min="0.1" max="10" step="0.1" value="1.0">
+    <div class="hint">Velocidade horizontal da mira, quando o emulador oferece esse ajuste.</div>
+  </div>
+
+  <div class="field">
+    <label for="sensY">Sensibilidade Y — vertical</label>
+    <input id="sensY" type="number" min="0.1" max="10" step="0.1" value="0.8">
+    <div class="hint">Velocidade vertical da mira, quando o emulador oferece esse ajuste.</div>
+  </div>
+
+  <div class="field">
+    <label for="pcFps">Taxa de quadros</label>
+    <select id="pcFps">
+      <option value="60">60 FPS</option>
+      <option value="90">90 FPS</option>
+      <option value="120" selected>120 FPS</option>
+      <option value="144">144 FPS ou mais</option>
+    </select>
+  </div>
+
+  <button class="primary" id="gerarPC">⚡ GERAR SENSIBILIDADE PARA PC</button>
+  <p class="pc-note">X e Y são valores de referência para um perfil experimental. Nem todos os emuladores permitem inserir esses valores diretamente. Confira as opções disponíveis no seu emulador.</p>
+</div>
+
+<div class="panel">
+  <div class="result-head">
+    <h2><span style="color:var(--red)">02 /</span> SEU PERFIL PC</h2>
+    <span class="pill">PC EDITION</span>
+  </div>
+
+  <div id="pcInicial">
+    <div class="device-info">
+      <strong>Aguardando geração</strong>
+      <span>Configure seus valores e gere um perfil.</span>
+    </div>
+    <div style="text-align:center;padding:28px 8px">
+      <div style="font-size:50px">🖥️</div>
+      <h3>Monte seu perfil</h3>
+      <p style="color:#d0b5b5;line-height:1.6">Sua sensibilidade do jogo, X, Y e DPI aparecerão aqui.</p>
+    </div>
+  </div>
+
+  <div class="results" id="pcResultados">
+    <div class="device-info">
+      <strong id="pcNome">Perfil PC</strong>
+      <span id="pcResumo"></span>
+    </div>
+
+    <div id="pcLista"></div>
+
+    <div class="dpi-card">
+      <small>DPI DO MOUSE</small>
+      <div class="dpi-value" id="pcDpiResultado">800</div>
+      <small>Valor selecionado</small>
+      <p id="pcDescricao">Teste os valores e ajuste de acordo com sua mira.</p>
+    </div>
+
+    <div class="result-actions">
+      <button class="primary" id="copiarPC">📋 COPIAR PERFIL PC</button>
+      <button class="secondary" id="refazerPC">↻ GERAR NOVAMENTE</button>
+    </div>
+
+    <div class="generation-count">Geração número <strong id="contadorPC">0</strong></div>
+
+    <div class="warning">
+      A sensibilidade ideal depende do mouse, DPI, aceleração, emulador e escala do jogo. Os valores não são aplicados automaticamente.
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ====================== DICAS ====================== -->
+<section class="extra">
+  <h2 class="section-title"><span>03 /</span> DICAS PARA JOGAR MELHOR</h2>
+  <div class="extra-grid">
+    <article class="tip">
+      <div class="icon">🎯</div>
+      <h3>Puxada de capa</h3>
+      <p>Faça movimentos controlados para cima e treine com diferentes armas. Altere um valor por vez para perceber a diferença.</p>
+    </article>
+    <article class="tip">
+      <div class="icon">🖱️</div>
+      <h3>PC e mouse</h3>
+      <p>O DPI do mouse e a sensibilidade do jogo trabalham em conjunto. DPI maior não significa automaticamente uma mira melhor.</p>
+    </article>
+    <article class="tip">
+      <div class="icon">🔴</div>
+      <h3>Teste cada perfil</h3>
+      <p>Se a mira passar do alvo, reduza a sensibilidade gradualmente. Se ficar curta, experimente aumentar um pouco.</p>
+    </article>
+  </div>
+</section>
+
+<!-- ====================== FAQ ====================== -->
+<section class="extra">
+  <h2 class="section-title"><span>04 /</span> DÚVIDAS FREQUENTES</h2>
+
+  <div class="faq">
+    <h3>Os perfis dos YouTubers são oficiais?</h3>
+    <p>Não. Os perfis de Nobru, El Gato, Cerol e Bak nesta ferramenta são demonstrativos e inspirados em estilos de jogo. Não são configurações oficiais verificadas.</p>
+  </div>
+
+  <div class="faq">
+    <h3>O que são X e Y no PC?</h3>
+    <p>X representa o eixo horizontal e Y o vertical. A disponibilidade e a escala desses ajustes dependem do emulador ou software utilizado.</p>
+  </div>
+
+  <div class="faq">
+    <h3>Qual é a melhor sensibilidade?</h3>
+    <p>Não existe um valor universal. O melhor ajuste depende do aparelho, mouse, DPI, controles e preferência pessoal.</p>
+  </div>
+
+  <div class="faq">
+    <h3>O DPI sugerido funciona no iPhone?</h3>
+    <p>Não. O iPhone não possui o mesmo ajuste de largura mínima do Android. Para iPhone, o gerador informa que o DPI não se aplica.</p>
+  </div>
+
+  <div class="faq">
+    <h3>O site altera as configurações do jogo?</h3>
+    <p>Não. Ele gera valores para você copiar e configurar manualmente no jogo ou emulador.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="logo">SENSI <span>PRO FF</span></div>
+  <p>Ferramenta independente de configuração para jogadores.</p>
+  <p>Não afiliada, patrocinada ou aprovada pela Garena. Free Fire é uma marca de seus respectivos proprietários.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite">Configuração copiada!</div>
+
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+
+let ultimaConfiguracao = null;
+let ultimaConfiguracaoPC = null;
+let contadorGeracoes = 0;
+let contadorPC = 0;
+let combinacaoAnterior = "";
+
+const nomesSensi = [
+  "Geral",
+  "Ponto Vermelho",
+  "Mira 2x",
+  "Mira 4x",
+  "Mira AWM",
+  "Olhadinha"
+];
+
+const perfis = {
+  capa:[190,185,175,160,85,180],
+  precisao:[155,145,135,120,65,130],
+  equilibrado:[175,165,155,140,75,160],
+  rush:[195,190,180,170,95,195],
+  oneTap:[185,180,160,130,60,145],
+  custom:[180,170,160,145,75,160]
+};
+
+const nomesEstilo = {
+  capa:"Puxada de capa",
+  precisao:"Precisão e controle",
+  equilibrado:"Equilibrado",
+  rush:"Rush",
+  oneTap:"One Tap",
+  custom:"Aleatório"
+};
+
+const nomesDesempenho = {
+  fraco:"Básico",
+  medio:"Intermediário",
+  forte:"Potente"
+};
+
+const faixas = {
+  baixa:{minimo:80,maximo:145},
+  media:{minimo:120,maximo:180},
+  alta:{minimo:150,maximo:200},
+  extrema:{minimo:175,maximo:200},
+  aleatoria:{minimo:80,maximo:200}
+};
+
+/*
+  Perfis demonstrativos inspirados em estilos de jogo.
+  Não representam valores oficiais confirmados dos jogadores.
+*/
+const presetsMobile = {
+  nobru:{
+    nome:"Nobru — perfil demonstrativo",
+    estilo:"capa",
+    valores:[192,188,174,158,83,185],
+    dpi:480
+  },
+  elgato:{
+    nome:"El Gato — perfil demonstrativo",
+    estilo:"rush",
+    valores:[195,190,181,168,91,193],
+    dpi:500
+  },
+  cerol:{
+    nome:"Cerol — perfil demonstrativo",
+    estilo:"equilibrado",
+    valores:[178,169,153,139,73,163],
+    dpi:460
+  },
+  bak:{
+    nome:"Bak — perfil demonstrativo",
+    estilo:"precisao",
+    valores:[163,151,140,125,66,137],
+    dpi:470
+  }
+};
+
+function aleatorio(min,max){
+  return Math.floor(Math.random()*(max-min+1))+min;
+}
+
+function mostrarToast(mensagem){
+  const toast=$("toast");
+  toast.textContent=mensagem;
+  toast.classList.add("show");
+
+  clearTimeout(mostrarToast.timer);
+
+  mostrarToast.timer=setTimeout(()=>{
+    toast.classList.remove("show");
+  },2400);
+}
+
+/* Alternar entre Mobile e PC */
+document.querySelectorAll(".mode-btn").forEach(botao=>{
+  botao.addEventListener("click",()=>{
+    document.querySelectorAll(".mode-btn").forEach(b=>{
+      b.classList.remove("active");
+    });
+
+    document.querySelectorAll(".mode-section").forEach(secao=>{
+      secao.classList.remove("active");
+    });
+
+    botao.classList.add("active");
+    $(botao.dataset.mode).classList.add("active");
+  });
+});
+
+/* ==================== GERADOR MOBILE ==================== */
+
+function gerarConfiguracao(){
+  const marca=$("marca").value;
+  const modelo=$("modelo").value.trim();
+  const desempenho=$("desempenho").value;
+  const estiloSelecionado=$("estilo").value;
+  const dedos=Number($("dedos").value);
+  const fps=Number($("fps").value);
+  const intensidadeSelecionada=$("intensidade").value;
+
+  const estilo=estiloSelecionado==="custom"
+    ?["capa","precisao","equilibrado","rush","oneTap"][aleatorio(0,4)]
+    :estiloSelecionado;
+
+  const intensidade=intensidadeSelecionada==="aleatoria"
+    ?["baixa","media","alta","extrema"][aleatorio(0,3)]
+    :intensidadeSelecionada;
+
+  const faixa=faixas[intensidade];
+  const base=perfis[estilo];
+
+  const ajusteDesempenho={
+    fraco:-7,
+    medio:0,
+    forte:3
+  }[desempenho];
+
+  const ajusteFPS={
+    30:-6,
+    60:0,
+    90:2,
+    120:3
+  }[fps];
+
+  const ajusteDedos={
+    2:0,
+    3:1,
+    4:2,
+    5:2
+  }[dedos];
+
+  const ajusteGeral=ajusteDesempenho+ajusteFPS+ajusteDedos;
+
+  let valores=base.map((valorBase,i)=>{
+    let ajuste=ajusteGeral;
+
+    if(i===3) ajuste-=7;
+    if(i===4) ajuste-=18;
+    if(i===5) ajuste+=2;
+
+    const centro=valorBase+ajuste;
+    const variacao=intensidade==="extrema"?18:24;
+    const minimoLocal=Math.max(faixa.minimo,centro-variacao);
+    const maximoLocal=Math.min(faixa.maximo,centro+variacao);
+
+    return aleatorio(minimoLocal,Math.max(minimoLocal,maximoLocal));
+  });
+
+  let assinatura=valores.join("-");
+
+  for(
+    let tentativa=0;
+    assinatura===combinacaoAnterior&&tentativa<10;
+    tentativa++
+  ){
+    const indice=aleatorio(0,valores.length-1);
+    valores[indice]=aleatorio(faixa.minimo,faixa.maximo);
+    assinatura=valores.join("-");
+  }
+
+  combinacaoAnterior=assinatura;
+
+  let dpi=null;
+
+  if(marca!=="iPhone"){
+    const basesDPI={
+      fraco:[380,450],
+      medio:[420,520],
+      forte:[450,600]
+    };
+
+    const [min,max]=basesDPI[desempenho];
+    dpi=aleatorio(min,max);
+  }
+
+  contadorGeracoes++;
+
+  ultimaConfiguracao={
+    marca,
+    modelo,
+    desempenho,
+    estilo,
+    intensidade,
+    dedos,
+    fps,
+    valores,
+    dpi,
+    numero:contadorGeracoes,
+    nomePerfil:""
+  };
+
+  mostrarResultados(ultimaConfiguracao);
+}
+
+function aplicarPresetMobile(chave){
+  const perfil=presetsMobile[chave];
+
+  if(!perfil) return;
+
+  contadorGeracoes++;
+
+  ultimaConfiguracao={
+    marca:$("marca").value,
+    modelo:$("modelo").value.trim(),
+    desempenho:$("desempenho").value,
+    estilo:perfil.estilo,
+    intensidade:"personalizada",
+    dedos:Number($("dedos").value),
+    fps:Number($("fps").value),
+    valores:[...perfil.valores],
+    dpi:$("marca").value==="iPhone"?null:perfil.dpi,
+    numero:contadorGeracoes,
+    nomePerfil:perfil.nome
+  };
+
+  mostrarResultados(ultimaConfiguracao);
+  mostrarToast("Perfil demonstrativo carregado!");
+}
+
+function mostrarResultados(c){
+  $("estadoInicial").style.display="none";
+  $("resultados").classList.add("visible");
+
+  $("nomeDispositivo").textContent=
+    (c.modelo?`${c.marca} ${c.modelo}`:c.marca)+
+    (c.nomePerfil?" — "+c.nomePerfil:"");
+
+  $("resumoDispositivo").textContent=
+    `${nomesDesempenho[c.desempenho]} • `+
+    `${nomesEstilo[c.estilo]} • ${c.intensidade} • `+
+    `${c.dedos} dedos • ${c.fps} FPS`;
+
+  $("listaSensi").innerHTML=c.valores.map((valor,i)=>`
+    <div class="sensi-row">
+      <span class="sensi-name">${nomesSensi[i]}</span>
+      <span class="sensi-number">${valor}</span>
+      <div class="bar">
+        <span style="width:${Math.min(100,valor/2)}%"></span>
+      </div>
+    </div>
+  `).join("");
+
+  if(c.dpi===null){
+    $("dpiValor").textContent="N/A";
+    $("tipoDpi").textContent="DPI não aplicável para iPhone";
+    $("dpiDescricao").textContent=
+      "Use os ajustes de sensibilidade disponíveis no jogo. "+
+      "O iPhone não possui o mesmo ajuste de largura mínima do Android.";
+  }else{
+    $("dpiValor").textContent=c.dpi;
+    $("tipoDpi").textContent="Referência experimental para Android";
+    $("dpiDescricao").textContent=
+      "Valor ilustrativo, não validado para seu modelo. "+
+      "Você não precisa alterar o DPI para usar a sensibilidade.";
+  }
+
+  $("contador").textContent=c.numero;
+
+  $("aviso").textContent=c.nomePerfil
+    ?"Perfil demonstrativo inspirado em um estilo de jogo; não representa configuração oficial verificada do jogador."
+    :"Valores aleatórios para experimentação. Não foram testados fisicamente no aparelho e não garantem capa.";
+
+  $("resultados").scrollIntoView({
+    behavior:"smooth",
+    block:"nearest"
+  });
+}
+
+function textoConfiguracaoMobile(){
+  const c=ultimaConfiguracao;
+
+  if(!c) return "";
+
+  return [
+    "🔴 SENSI PRO FF — RED EDITION",
+    c.nomePerfil||"Configuração Mobile",
+    `Geração: ${c.numero}`,
+    `Celular: ${c.marca}${c.modelo?" "+c.modelo:""}`,
+    `Estilo: ${nomesEstilo[c.estilo]}`,
+    `Intensidade: ${c.intensidade}`,
+    `Desempenho: ${nomesDesempenho[c.desempenho]}`,
+    `Dedos: ${c.dedos}`,
+    `FPS: ${c.fps}`,
+    "",
+    ...nomesSensi.map((nome,i)=>`${nome}: ${c.valores[i]}`),
+    `DPI sugerido: ${c.dpi===null?"Não aplicável no iPhone":c.dpi}`,
+    "",
+    "Valores experimentais para teste. Ajuste no treinamento."
+  ].join("\n");
+}
+
+/* ==================== GERADOR PC ==================== */
+
+$("pcDpi").addEventListener("change",()=>{
+  $("customDpiField").style.display=
+    $("pcDpi").value==="custom"?"block":"none";
+});
+
+function gerarPC(){
+  const estilo=$("pcEstilo").value;
+  const dpiSelecionado=$("pcDpi").value;
+
+  const dpi=dpiSelecionado==="custom"
+    ?Number($("customDpi").value)
+    :Number(dpiSelecionado);
+
+  let jogo=Number($("gameSens").value);
+  let x=Number($("sensX").value);
+  let y=Number($("sensY").value);
+  const fps=Number($("pcFps").value);
+
+  if(!Number.isFinite(dpi)||dpi<100||dpi>16000){
+    mostrarToast("Informe um DPI válido entre 100 e 16000.");
+    return;
+  }
+
+  if(
+    !Number.isFinite(jogo)||jogo<1||jogo>200||
+    !Number.isFinite(x)||x<0.1||x>10||
+    !Number.isFinite(y)||y<0.1||y>10
+  ){
+    mostrarToast("Confira os valores de sensibilidade.");
+    return;
+  }
+
+  const ajuste={
+    controle:-8,
+    equilibrado:0,
+    rapido:10,
+    onetap:6
+  }[estilo];
+
+  jogo=Math.max(
+    1,
+    Math.min(200,Math.round(jogo+aleatorio(-8,8)+ajuste))
+  );
+
+  x=Math.max(
+    0.1,
+    Math.min(10,Number((x+aleatorio(-3,3)/10+ajuste/100).toFixed(2)))
+  );
+
+  y=Math.max(
+    0.1,
+    Math.min(10,Number((
+      y+aleatorio(-3,3)/10+
+      (estilo==="controle"?-0.05:0)
+    ).toFixed(2)))
+  );
+
+  contadorPC++;
+
+  ultimaConfiguracaoPC={
+    emulador:$("emulador").value,
+    estilo,
+    dpi,
+    jogo,
+    x,
+    y,
+    fps,
+    numero:contadorPC
+  };
+
+  $("pcInicial").style.display="none";
+  $("pcResultados").classList.add("visible");
+
+  $("pcNome").textContent="Perfil PC — "+ultimaConfiguracaoPC.emulador;
+  $("pcResumo").textContent=
+    `Estilo: ${estilo} • ${fps} FPS • Geração ${contadorPC}`;
+
+  $("pcDpiResultado").textContent=dpi;
+  $("contadorPC").textContent=contadorPC;
+
+  const linhas=[
+    ["Sensibilidade do jogo",jogo,200],
+    ["Sensibilidade X",x.toFixed(2),10],
+    ["Sensibilidade Y",y.toFixed(2),10],
+    ["DPI do mouse",dpi,1600],
+    ["FPS selecionado",fps,144]
+  ];
+
+  $("pcLista").innerHTML=linhas.map(linha=>`
+    <div class="sensi-row">
+      <span class="sensi-name">${linha[0]}</span>
+      <span class="sensi-number" style="font-size:18px">${linha[1]}</span>
+      <div class="bar">
+        <span style="width:${Math.max(3,Math.min(100,Number(linha[1])/linha[2]*100))}%"></span>
+      </div>
+    </div>
+  `).join("");
+
+  $("pcDescricao").textContent=
+    "Perfil experimental. Confira a escala do emulador antes de aplicar os números.";
+
+  $("pcResultados").scrollIntoView({
+    behavior:"smooth",
+    block:"nearest"
+  });
+}
+
+function textoConfiguracaoPC(){
+  const c=ultimaConfiguracaoPC;
+
+  if(!c) return "";
+
+  return [
+    "🔴 SENSI PRO FF — PC EDITION",
+    `Emulador: ${c.emulador}`,
+    `Estilo: ${c.estilo}`,
+    `Sensibilidade do jogo: ${c.jogo}`,
+    `Sensibilidade X: ${c.x}`,
+    `Sensibilidade Y: ${c.y}`,
+    `DPI do mouse: ${c.dpi}`,
+    `FPS: ${c.fps}`,
+    `Geração: ${c.numero}`,
+    "",
+    "Valores experimentais. Confira a escala do emulador."
+  ].join("\n");
+}
+
+/* ==================== COPIAR CONFIGURAÇÕES ==================== */
+
+async function copiarTexto(texto){
+  if(!texto){
+    mostrarToast("Gere uma configuração primeiro.");
+    return;
+  }
+
+  try{
+    if(navigator.clipboard&&window.isSecureContext){
+      await navigator.clipboard.writeText(texto);
+    }else{
+      const area=document.createElement("textarea");
+      area.value=texto;
+      area.style.position="fixed";
+      area.style.left="-9999px";
+      area.style.top="0";
+      document.body.appendChild(area);
+      area.focus();
+      area.select();
+
+      const sucesso=document.execCommand("copy");
+      area.remove();
+
+      if(!sucesso) throw new Error("Falha ao copiar");
+    }
+
+    mostrarToast("Configuração copiada com sucesso!");
+  }catch(erro){
+    mostrarToast("Não foi possível copiar. Tente novamente.");
+  }
+}
+
+/* ==================== EVENTOS ==================== */
+
+$("gerar").addEventListener("click",gerarConfiguracao);
+$("refazer").addEventListener("click",gerarConfiguracao);
+
+$("copiar").addEventListener("click",()=>{
+  copiarTexto(textoConfiguracaoMobile());
+});
+
+document.querySelectorAll("[data-preset]").forEach(botao=>{
+  botao.addEventListener("click",()=>{
+    aplicarPresetMobile(botao.dataset.preset);
+  });
+});
+
+$("gerarPC").addEventListener("click",gerarPC);
+$("refazerPC").addEventListener("click",gerarPC);
+
+$("copiarPC").addEventListener("click",()=>{
+  copiarTexto(textoConfiguracaoPC());
+});
+</script>
+</body>
+</html>
